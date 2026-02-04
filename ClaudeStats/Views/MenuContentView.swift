@@ -107,6 +107,14 @@ struct MenuContentView: View {
                 .toggleStyle(.switch)
                 .controlSize(.small)
 
+            Toggle("Launch at login", isOn: Binding(
+                get: { vm.launchAtLogin },
+                set: { vm.setLaunchAtLogin($0) }
+            ))
+                .font(.caption)
+                .toggleStyle(.switch)
+                .controlSize(.small)
+
             Divider()
 
             // Footer buttons

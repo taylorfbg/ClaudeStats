@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 import WebKit
 import Combine
+import ServiceManagement
 
 class StatsViewModel: NSObject, ObservableObject {
     // MARK: - Published Properties
@@ -14,6 +15,8 @@ class StatsViewModel: NSObject, ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isLoggedIn: Bool = false
     @Published var needsLogin: Bool = true
+    @Published var initialLoadComplete: Bool = false
+    @Published var hasAutoOpenedLoginWindow: Bool = false
 
     // MARK: - User Settings
     @AppStorage("showPercentInMenuBar") var showPercentInMenuBar: Bool = false
@@ -68,8 +71,27 @@ class StatsViewModel: NSObject, ObservableObject {
                     self.sessionResetsIn = "--"
                     self.weeklyResetsAt = "--"
                     self.lastRefresh = nil
+                    self.hasAutoOpenedLoginWindow = false
                 }
             }
+        }
+    }
+
+    // MARK: - Launch at Login
+    var launchAtLogin: Bool {
+        SMAppService.mainApp.status == .enabled
+    }
+
+    func setLaunchAtLogin(_ enabled: Bool) {
+        objectWillChange.send()
+        do {
+            if enabled {
+                try SMAppService.mainApp.register()
+            } else {
+                try SMAppService.mainApp.unregister()
+            }
+        } catch {
+            print("Failed to \(enabled ? "register" : "unregister") login item: \(error)")
         }
     }
 
@@ -222,6 +244,8 @@ class StatsViewModel: NSObject, ObservableObject {
                 } else if self.errorMessage == nil {
                     self.errorMessage = "No usage data found on page"
                 }
+
+                self.initialLoadComplete = true
             }
         }
     }
@@ -240,6 +264,7 @@ extension StatsViewModel: WKNavigationDelegate {
         DispatchQueue.main.async {
             self.isLoading = false
             self.errorMessage = "Failed to load: \(error.localizedDescription)"
+            self.initialLoadComplete = true
         }
     }
 
@@ -247,6 +272,7 @@ extension StatsViewModel: WKNavigationDelegate {
         DispatchQueue.main.async {
             self.isLoading = false
             self.errorMessage = "Connection failed: \(error.localizedDescription)"
+            self.initialLoadComplete = true
         }
     }
 }

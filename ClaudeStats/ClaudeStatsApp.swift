@@ -17,6 +17,12 @@ struct ClaudeStatsApp: App {
                         .font(.caption)
                 }
             }
+            .onReceive(vm.$initialLoadComplete) { complete in
+                if complete && vm.needsLogin && !vm.isLoggedIn && !vm.hasAutoOpenedLoginWindow {
+                    vm.hasAutoOpenedLoginWindow = true
+                    openWindow(id: "settings")
+                }
+            }
         }
         .menuBarExtraStyle(.window)
 
