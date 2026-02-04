@@ -19,7 +19,9 @@ class StatsViewModel: NSObject, ObservableObject {
     @Published var hasAutoOpenedLoginWindow: Bool = false
 
     // MARK: - User Settings
-    @AppStorage("showPercentInMenuBar") var showPercentInMenuBar: Bool = false
+    @Published var showPercentInMenuBar: Bool = UserDefaults.standard.bool(forKey: "showPercentInMenuBar") {
+        didSet { UserDefaults.standard.set(showPercentInMenuBar, forKey: "showPercentInMenuBar") }
+    }
 
     // MARK: - WebView
     let webView: WKWebView
@@ -38,6 +40,7 @@ class StatsViewModel: NSObject, ObservableObject {
         super.init()
 
         webView.navigationDelegate = self
+        NotificationManager.shared.requestPermission()
         loadUsagePage()
         startTimer()
     }
@@ -241,6 +244,13 @@ class StatsViewModel: NSObject, ObservableObject {
                     self.needsLogin = false
                     self.errorMessage = nil
                     self.lastRefresh = Date()
+
+                    // Check notification thresholds
+                    NotificationManager.shared.checkUsageThresholds(
+                        sessionPercent: self.sessionPercent,
+                        weeklyPercent: self.weeklyPercent,
+                        sessionResetsIn: self.sessionResetsIn
+                    )
                 } else if self.errorMessage == nil {
                     self.errorMessage = "No usage data found on page"
                 }

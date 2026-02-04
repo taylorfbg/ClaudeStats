@@ -16,6 +16,8 @@
 		AAA000007 /* UsageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBB000008; };
 		AAA000008 /* ClaudeIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBB000009; };
 		AAA000009 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BBB000010; };
+		AAA000010 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBB000011; };
+		AAA000011 /* ClaudeCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBB000012; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +31,8 @@
 		BBB000008 /* UsageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageData.swift; sourceTree = "<group>"; };
 		BBB000009 /* ClaudeIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeIcon.swift; sourceTree = "<group>"; };
 		BBB000010 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BBB000011 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		BBB000012 /* ClaudeCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeCodeManager.swift; sourceTree = "<group>"; };
 		CCC000001 /* ClaudeStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClaudeStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -57,6 +61,8 @@
 				BBB000001 /* ClaudeStatsApp.swift */,
 				BBB000003 /* StatsViewModel.swift */,
 				BBB000009 /* ClaudeIcon.swift */,
+				BBB000011 /* NotificationManager.swift */,
+				BBB000012 /* ClaudeCodeManager.swift */,
 				BBB000010 /* Assets.xcassets */,
 				BBB000007 /* Info.plist */,
 				EEE000003 /* Models */,
@@ -169,6 +175,8 @@
 				AAA000006 /* SettingsView.swift in Sources */,
 				AAA000007 /* UsageData.swift in Sources */,
 				AAA000008 /* ClaudeIcon.swift in Sources */,
+				AAA000010 /* NotificationManager.swift in Sources */,
+				AAA000011 /* ClaudeCodeManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

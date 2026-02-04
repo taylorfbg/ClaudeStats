@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MenuContentView: View {
     @EnvironmentObject var vm: StatsViewModel
+    @EnvironmentObject var claudeCode: ClaudeCodeManager
     var openSettingsWindow: () -> Void = {}
 
     var body: some View {
@@ -101,6 +102,11 @@ struct MenuContentView: View {
 
             Divider()
 
+            // Claude Code Section
+            claudeCodeSection
+
+            Divider()
+
             // Show in menu bar toggle
             Toggle("Show % in menu bar", isOn: $vm.showPercentInMenuBar)
                 .font(.caption)
@@ -147,6 +153,86 @@ struct MenuContentView: View {
         .padding()
         .frame(width: 280)
     }
+
+    // MARK: - Claude Code Section
+
+    private var claudeCodeSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: "terminal.fill")
+                    .foregroundColor(.purple)
+                Text("Claude Code")
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                Spacer()
+                Button(action: { claudeCode.openNewSession() }) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "plus")
+                        Text("New")
+                    }
+                    .font(.caption)
+                }
+                .buttonStyle(.plain)
+                .foregroundColor(.blue)
+                .help("Open new Claude Code session")
+            }
+
+            if claudeCode.sessions.isEmpty {
+                Text("No active sessions")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            } else {
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(claudeCode.sessions) { session in
+                        sessionRow(session)
+                    }
+                }
+            }
+        }
+    }
+
+    private func sessionRow(_ session: ClaudeCodeSession) -> some View {
+        Button(action: { claudeCode.focusSession(session) }) {
+            HStack(spacing: 6) {
+                // Status indicator
+                statusIndicator(for: session.status)
+
+                // Session title
+                Text(session.title)
+                    .font(.caption)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+
+                Spacer()
+
+                // Status label
+                Text(session.status.label)
+                    .font(.caption2)
+                    .foregroundColor(statusColor(for: session.status))
+            }
+            .padding(.vertical, 3)
+            .padding(.horizontal, 6)
+            .background(Color.primary.opacity(0.04))
+            .cornerRadius(4)
+        }
+        .buttonStyle(.plain)
+        .help("Click to focus this session")
+    }
+
+    @ViewBuilder
+    private func statusIndicator(for status: ClaudeCodeSession.SessionStatus) -> some View {
+        Circle()
+            .fill(statusColor(for: status))
+            .frame(width: 7, height: 7)
+    }
+
+    private func statusColor(for status: ClaudeCodeSession.SessionStatus) -> Color {
+        switch status {
+        case .working: return .blue
+        case .waiting: return .orange
+        case .idle: return .gray
+        }
+    }
 }
 
 struct UsageBarView: View {
@@ -181,4 +267,5 @@ struct UsageBarView: View {
 #Preview {
     MenuContentView()
         .environmentObject(StatsViewModel())
+        .environmentObject(ClaudeCodeManager())
 }
